@@ -1,0 +1,167 @@
+正则匹配：
+    1、原子
+        #普通原子作为原子
+        string="taobao"
+        pat="bao"
+        result=re.search(pat,string)
+
+        #非打印字符作为原子
+        #\n 换行符         \t 制表符
+        string = '''taobao
+        com'''
+        path = '\n'
+        res = re.search(path,string)
+        print(res)
+
+        #通用字符作为原子
+        '''
+        \w 字母、数字、下划线
+        \W 除字母、数字、下划线
+        \d 十进制数
+        \D 除十进制数之外的数
+        \s 空白字符
+        \S 除空白字符
+        ^表示非的意思
+        '''
+        string = '''abcdhfgkj123456ajdiwoaid'''
+        pat='\d'
+        result = re.search(pat,string)
+        print(result)
+    2、元字符
+        '''
+        . 除了换行符意外的任意一个字符
+        ^ 不在原子表中表示，表示开始位置
+        $ 结束位置
+        * 前面出现0次或1或多次
+        ？ 前面出现0次或1次
+        + 前面出现1次或多次
+        {n} 前面恰好出现n次
+        {n,} 前面的至少n次
+        {n,m} 前面至少出现n次，至多m次
+        | 模式选择符（或）
+        ()  模式单元
+        '''
+        string = '''taoyunji8123456ajdiwoaid'''
+        pat='tao...'
+        result = re.search(pat,string)
+        print(result)
+    3、模式修正符
+        '''
+        I 匹配时忽略大小写
+        M 多行匹配
+        L 本地化识别匹配
+        U Unicode
+        S 让.匹配包括换行符
+        '''
+        string = '''Python'''
+        pat ="pyt"
+        result = re.search(pat, string, re.I)
+        print(result)
+    4、模式
+        贪婪匹配.*?     (默认是贪婪模式) 精准匹配
+        非贪婪匹配.*     模糊匹配
+        注：如果在结尾使用贪婪匹配可能匹配不到内容，结尾推荐使用非贪婪匹配
+
+        当遇到匹配内容换行需要匹配的时候直接在
+        result=re.match(parteen,string,re.S)
+        parteen为正则表达式
+        string为匹配内容
+        re.S使.匹配包括换行在内的所有字符
+        re.I使匹配对大小写不敏感
+        re.L做本地识别(local-aware)匹配
+        re.M多行匹配，影响^和$
+        re.U根据Unicode字符集解析字符。这个标志影响\w、\W、\b和\B
+        re.X该标志通过给予你更灵活的格式以便你将正则表达式写的易于理解
+
+        当遇到.的时候用转义字符\进行转义处理匹配
+    5、正则表达式函数
+        re.match()函数                #从开头开始匹配
+            string = '''poythobhjskjsa'''
+            pat = "p.*?y"   #测试一
+            pat = "o.*?y"   #测试二
+            res = re.match(pat, string, re.I)
+            print (res)
+
+            <re.Match object; span=(0, 13), match='Pooythonyyyyy'>      #测试一结果
+            None                                                        #测试二结果
+        re.serach()函数               #从任意位置开始匹配
+            string = '''poythobhjskjsa'''
+            pat = "p.*?y"   #测试一
+            pat = "o.*?y"   #测试二
+            res = re.search(pat, string, re.I)
+            print (res)
+
+            <re.Match object; span=(0, 13), match='Pooythonyyyyy'>      #测试一结果
+            <re.Match object; span=(1, 4), match='ooy'>                 #测试二结果
+
+
+        全局匹配函数：
+            格式：re.compile(正则表达式).findall(需要匹配的数据)
+               string = '''Pooythonyyyyy'''
+               pat = "p.*?y"
+               result = re.compile(pat, re.I).findall(string)
+               print(result)
+
+               ['Pooy']
+
+        re.sub()函数
+
+    6、实例展示
+        6.1、匹配网址.com和.cn
+            import re
+            str = "<a href='http://www.baidu.com'>百度首页</a>"
+            pat = '[a-zA-Z]+://[^\s]*[.com|.cn]'
+            res=re.compile(pat).findall(str)
+            print(res)
+
+        6.2、爬取豆瓣网的出版社
+            import urllib.request
+            import re
+            data = urllib.request.urlopen("https://read.douban.com/provider/all").read().decode("utf-8")
+            path = '<div class="name">(.*?)</div><div class="works-num">(.*?)</div>'
+            result = re.compile(path).findall(data)
+            f = open("name.txt", "w")
+            for i in range(len(result)):
+                print(str(result[i][0]+"    "+result[i][1]))
+                f.write(str(result[i][0]+"    "+result[i][1])+'\n')
+            f.close()
+
+    7、urlretrieve(网址,本地文件存储地址)直接下载网页到本地
+        urllib.request.urlretrieve("http://www.baidu.com/","dld.html")
+
+    8、清除网页缓存
+        urllib.request.urlcleanup()
+
+    9、info()查看相应网页的简介
+        file=urllib.request.urlopen("https://read.douban.com.provider/all")
+        print(file)
+
+    10、getconde()   返回网页的状态码（判断网页的死链(即判断是否打开)）
+        print(file.getcode())
+        200(状态码，正常)
+
+    11、geturl()  获取当前访问的网页的url，geturl()
+        print(file.geturl())
+
+    12、timeout设置网页最长响应时间
+
+    13、get和post请求的
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
